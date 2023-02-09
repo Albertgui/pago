@@ -35,6 +35,7 @@ export class CartComponent implements OnInit{
         createOrderOnClient: (data) => < ICreateOrderRequest > {
             intent: 'CAPTURE',
             purchase_units: [{
+              // Pedir el total y convertirlo a string para hacer el check
                 amount: {
                     currency_code: 'USD',
                     value: this.getTotal().toString(),
@@ -45,6 +46,7 @@ export class CartComponent implements OnInit{
                         }
                     }
                 },
+              // Pedir la lista de articulos de la función
                 items: this.getItemsList()
             }]
         },
@@ -94,7 +96,8 @@ export class CartComponent implements OnInit{
       this.storageService.setCart(this.cartItems);
     });
   }
-
+  
+  // Retornar la lista para totalizar el monto a cobrar
   getItemsList(): any[]{
     const items: any[] = [];
     let item = {};
