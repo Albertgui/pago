@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environments';
 })
 export class CartComponent implements OnInit{
 
-  public payPalConfig ? : IPayPalConfig;
+  public payPalConfig ?: IPayPalConfig;
   cartItems: any = [];
   total: number = 0;
 
@@ -37,25 +37,15 @@ export class CartComponent implements OnInit{
             purchase_units: [{
                 amount: {
                     currency_code: 'USD',
-                    value: '9.99',
+                    value: this.getTotal().toString(),
                     breakdown: {
                         item_total: {
                             currency_code: 'USD',
-                            value: '9.99'
+                            value: this.getTotal().toString()
                         }
                     }
                 },
-                items: [
-                  {
-                    name: 'Enterprise Subscription',
-                    quantity: '1',
-                    category: 'DIGITAL_GOODS',
-                    unit_amount: {
-                        currency_code: '9.99',
-                        value: '9.99',
-                    }
-                  }
-                ]
+                items: this.getItemsList()
             }]
         },
         advanced: {
@@ -70,10 +60,10 @@ export class CartComponent implements OnInit{
             actions.order.get().then((details: any) => {
                 console.log('onApprove - you can get full order details inside onApprove: ', details);
             });
-
         },
         onClientAuthorization: (data) => {
-            console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
+            console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point');
+            JSON.stringify(data);
         },
         onCancel: (data, actions) => {
             console.log('OnCancel', data, actions);
@@ -105,6 +95,20 @@ export class CartComponent implements OnInit{
     });
   }
 
+  getItemsList(): any[]{
+    const items: any[] = [];
+    let item = {};
+    this.cartItems.forEach((it: CartItemModel) => {
+      item = {
+        name: it.productName,
+        quantity: it.qty,
+        unit_amount: {value: it.productPrice, currency_code: 'USD'}
+      };
+      items.push(item);
+    });
+    return items;
+  }
+
   getTotal(): number{
     let total = 0;
     this.cartItems.forEach((item: { qty: number; productPrice: number; }) => {
@@ -130,3 +134,4 @@ export class CartComponent implements OnInit{
     this.storageService.setCart(this.cartItems);
   }
 }
+
