@@ -41,7 +41,7 @@ export class CartComponent implements OnInit{
                     breakdown: {
                         item_total: {
                             currency_code: 'USD',
-                            value: '10'
+                            value: '9.99'
                         }
                     }
                 },
